@@ -159,8 +159,8 @@
         <p class="error-message">Maaf, halaman yang Anda cari tidak ditemukan. Mungkin telah dipindahkan, dihapus, atau Anda salah mengetik URL.</p>
         
         <div class="error-search">
-            <input type="text" class="search-input" placeholder="Cari sesuatu...">
-            <button class="search-button">Cari</button>
+            <input type="text" class="search-input" id="searchInput" placeholder="Masukkan angka (contoh: 1, 2, 3)">
+            <button class="search-button" id="searchButton">Cari</button>
         </div>
         
         <div class="error-actions">
@@ -213,20 +213,60 @@
             document.head.appendChild(style);
             
             // Search functionality
-            const searchInput = document.querySelector('.search-input');
-            const searchButton = document.querySelector('.search-button');
+            const searchInput = document.getElementById('searchInput');
+            const searchButton = document.getElementById('searchButton');
+            
+            // Function to add path parameter
+            function addPathParameter(value) {
+                // Get current URL
+                const currentUrl = window.location.href;
+                
+                // Remove any existing hash or query parameters
+                const baseUrl = currentUrl.split('#')[0].split('?')[0];
+                
+                // Remove trailing slash if exists
+                const cleanUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
+                
+                // Remove 404.html if it's in the URL
+                let newUrl = cleanUrl;
+                if (newUrl.endsWith('404.html')) {
+                    newUrl = newUrl.substring(0, newUrl.length - 9);
+                }
+                
+                // Add the new path parameter
+                if (!newUrl.endsWith('/')) {
+                    newUrl += '/';
+                }
+                
+                newUrl += value;
+                
+                // Redirect to the new URL
+                window.location.href = newUrl;
+            }
             
             searchButton.addEventListener('click', function() {
-                if (searchInput.value.trim() !== '') {
-                    alert('Pencarian untuk: ' + searchInput.value);
-                    // Implement your search functionality here
+                const searchValue = searchInput.value.trim();
+                if (searchValue !== '') {
+                    // Validate if it's a number
+                    if (/^\d+$/.test(searchValue)) {
+                        addPathParameter(searchValue);
+                    } else {
+                        alert('Harap masukkan angka yang valid (contoh: 1, 2, 3)');
+                    }
                 }
             });
             
             searchInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter' && searchInput.value.trim() !== '') {
-                    alert('Pencarian untuk: ' + searchInput.value);
-                    // Implement your search functionality here
+                if (e.key === 'Enter') {
+                    const searchValue = searchInput.value.trim();
+                    if (searchValue !== '') {
+                        // Validate if it's a number
+                        if (/^\d+$/.test(searchValue)) {
+                            addPathParameter(searchValue);
+                        } else {
+                            alert('Harap masukkan angka yang valid (contoh: 1, 2, 3)');
+                        }
+                    }
                 }
             });
         });
