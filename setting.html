@@ -41,7 +41,7 @@
         }
         
         .form-textarea {
-            min-height: 100px;
+            min-height: 120px;
             resize: vertical;
         }
         
@@ -60,6 +60,7 @@
         
         .result-container {
             display: none;
+            background: linear-gradient(145deg, #1e3e2a, #2a523b);
             padding: 20px;
             border-radius: 10px;
             margin-top: 30px;
@@ -88,17 +89,6 @@
         
         .copy-btn {
             background: linear-gradient(to right, #00f2fe 0%, #4facfe 100%);
-            border: none;
-            border-radius: 5px;
-            padding: 8px 15px;
-            color: white;
-            cursor: pointer;
-            font-size: 0.9rem;
-            margin-right: 10px;
-        }
-        
-        .test-btn {
-            background: linear-gradient(to right, #ffcc00, #ff9900);
             border: none;
             border-radius: 5px;
             padding: 8px 15px;
@@ -149,12 +139,6 @@
             margin-bottom: 10px;
             color: #b0b0b0;
         }
-        
-        .btn-group {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
     </style>
 </head>
 <body>
@@ -173,39 +157,34 @@
         <p>Buat tautan pendek menggunakan GitHub Issues API</p>
         
         <div class="instructions">
-            <h3>Mekanisme:</h3>
-            <ul>
-                <li><strong>Title Issue</strong> = URL tujuan (harus valid URL)</li>
-                <li><strong>Body Issue</strong> = Judul/deskripsi link</li>
-                <li><strong>Issue Number</strong> = Path parameter untuk short link</li>
-            </ul>
+            <h3>Cara Menggunakan:</h3>
+            <ol>
+                <li>Buat Personal Access Token di GitHub dengan permission "repo"</li>
+                <li>Isi form di bawah dengan URL tujuan dan token Anda</li>
+                <li>Klik "Buat Short Link" untuk membuat issue baru</li>
+                <li>Issue number akan menjadi path parameter untuk short link</li>
+            </ol>
         </div>
         
         <form id="shortenForm">
             <div class="form-group">
-                <label for="destinationUrl">URL Tujuan (Title Issue):</label>
-                <input type="url" id="destinationUrl" class="form-input" 
-                       placeholder="https://example.com" required
-                       pattern="https?://.+" title="Harus dimulai dengan http:// atau https://">
-                <small style="color: #888; font-size: 0.9rem;">URL harus valid dan lengkap dengan http/https</small>
-            </div>
-            
-            <div class="form-group">
-                <label for="linkTitle">Judul Link (Body Issue):</label>
-                <input type="text" id="linkTitle" class="form-input" 
-                       placeholder="Judul untuk link ini" required>
+                <label for="destinationUrl">URL Tujuan:</label>
+                <input type="url" id="destinationUrl" class="form-input" placeholder="https://example.com" required>
             </div>
             
             <div class="form-group">
                 <label for="githubToken">GitHub Personal Access Token:</label>
-                <input type="password" id="githubToken" class="form-input" 
-                       placeholder="ghp_yourTokenHere" required>
+                <input type="password" id="githubToken" class="form-input" placeholder="ghp_yourTokenHere" required>
             </div>
             
             <div class="form-group">
-                <label for="issueDescription">Deskripsi Tambahan (Opsional):</label>
-                <textarea id="issueDescription" class="form-input form-textarea" 
-                          placeholder="Deskripsi tambahan tentang link ini..."></textarea>
+                <label for="issueTitle">Judul Issue (Opsional):</label>
+                <input type="text" id="issueTitle" class="form-input" placeholder="Short Link untuk [URL Anda]">
+            </div>
+            
+            <div class="form-group">
+                <label for="issueDescription">Deskripsi Issue (Opsional):</label>
+                <textarea id="issueDescription" class="form-input form-textarea" placeholder="Deskripsi tentang link ini..."></textarea>
             </div>
             
             <button type="submit" class="btn">Buat Short Link</button>
@@ -213,34 +192,19 @@
         
         <div class="loading" id="loading">
             <div class="spinner"></div>
-            <p>Sedang membuat GitHub Issue...</p>
+            <p>Sedang membuat short link...</p>
         </div>
         
         <div class="result-container" id="resultContainer">
             <h3 id="resultTitle">Berhasil!</h3>
-            <p id="resultMessage"></p>
+            <p id="resultMessage">Short link berhasil dibuat:</p>
             <div class="short-url" id="shortUrl"></div>
-            <div class="btn-group">
-                <button class="copy-btn" id="copyBtn">Salin URL</button>
-                <button class="test-btn" id="testBtn">Test Link</button>
-            </div>
-            <div id="issueInfo" style="margin-top: 15px; font-size: 0.9rem; color: #b0b0b0;"></div>
+            <button class="copy-btn" id="copyBtn">Salin URL</button>
         </div>
         
         <div class="token-info">
-            <h3>Info GitHub Token:</h3>
-            <p>Buat Personal Access Token di: GitHub Settings → Developer settings → Personal access tokens</p>
-            <p>Permission yang dibutuhkan: <strong>repo</strong> (untuk membuat issue)</p>
-        </div>
-        
-        <div class="instructions">
-            <h3>Catatan Penting:</h3>
-            <ul>
-                <li>Pastikan repository GitHub Anda sudah ada</li>
-                <li>Token harus memiliki permission "repo"</li>
-                <li>URL tujuan harus valid (dimulai dengan http:// atau https://)</li>
-                <li>Issue number akan menjadi path parameter short link</li>
-            </ul>
+            <h3>Info Token GitHub:</h3>
+            <p>Anda perlu membuat Personal Access Token dengan permission "repo" di GitHub Settings → Developer settings → Personal access tokens</p>
         </div>
     </div>
 
@@ -280,10 +244,8 @@
             const resultMessage = document.getElementById('resultMessage');
             const shortUrl = document.getElementById('shortUrl');
             const copyBtn = document.getElementById('copyBtn');
-            const testBtn = document.getElementById('testBtn');
-            const issueInfo = document.getElementById('issueInfo');
             
-            // Konfigurasi GitHub (GANTI dengan milik Anda)
+            // Konfigurasi GitHub (sesuaikan dengan repo Anda)
             const GITHUB_OWNER = 'YOUR_OWNER'; // Ganti dengan username GitHub Anda
             const GITHUB_REPO = 'YOUR_REPO';   // Ganti dengan nama repository Anda
             const GITHUB_API_URL = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/issues`;
@@ -293,13 +255,13 @@
                 e.preventDefault();
                 
                 const destinationUrl = document.getElementById('destinationUrl').value;
-                const linkTitle = document.getElementById('linkTitle').value;
                 const githubToken = document.getElementById('githubToken').value;
-                const description = document.getElementById('issueDescription').value;
+                const issueTitle = document.getElementById('issueTitle').value || `Short Link: ${destinationUrl}`;
+                const issueDescription = document.getElementById('issueDescription').value || `Short link untuk: ${destinationUrl}`;
                 
                 // Validasi URL
                 if (!isValidUrl(destinationUrl)) {
-                    showError('URL tidak valid. Harus dimulai dengan http:// atau https://');
+                    showError('URL tidak valid. Pastikan URL dimulai dengan http:// atau https://');
                     return;
                 }
                 
@@ -308,21 +270,20 @@
                 resultContainer.style.display = 'none';
                 
                 try {
-                    // Buat issue di GitHub dengan title sebagai URL tujuan
+                    // Buat issue di GitHub
                     const response = await createGitHubIssue(
                         githubToken, 
-                        destinationUrl, // Title = URL tujuan
-                        linkTitle,      // Body = Judul link
-                        description     // Deskripsi tambahan
+                        issueTitle, 
+                        destinationUrl, 
+                        issueDescription
                     );
                     
-                    if (response && response.number && response.html_url) {
+                    if (response && response.number) {
                         const issueNumber = response.number;
                         const shortLink = `${BASE_URL}/${issueNumber}`;
-                        const githubIssueUrl = response.html_url;
                         
                         // Tampilkan hasil
-                        showSuccess(shortLink, issueNumber, githubIssueUrl, response.title);
+                        showSuccess(shortLink, issueNumber);
                     } else {
                         throw new Error('Gagal membuat issue: Response tidak valid');
                     }
@@ -334,11 +295,7 @@
             });
             
             // Fungsi untuk membuat GitHub Issue
-            async function createGitHubIssue(token, title, body, description = '') {
-                const fullBody = description 
-                    ? `**Judul Link:** ${body}\n\n**Deskripsi:** ${description}\n\n---\n*Dibuat otomatis melalui Short Link Generator*`
-                    : `**Judul Link:** ${body}\n\n---\n*Dibuat otomatis melalui Short Link Generator*`;
-                
+            async function createGitHubIssue(token, title, url, description) {
                 const response = await fetch(GITHUB_API_URL, {
                     method: 'POST',
                     headers: {
@@ -347,14 +304,14 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        title: title,  // Title = URL tujuan
-                        body: fullBody // Body = Judul + deskripsi
+                        title: title,
+                        body: `**URL Tujuan:** ${url}\n\n**Deskripsi:** ${description}\n\n---\n*Dibuat secara otomatis melalui Short Link Generator*`
                     })
                 });
                 
                 if (!response.ok) {
                     const errorData = await response.json();
-                    throw new Error(errorData.message || `HTTP ${response.status}: Gagal membuat issue`);
+                    throw new Error(errorData.message || 'Gagal membuat issue');
                 }
                 
                 return await response.json();
@@ -363,27 +320,22 @@
             // Validasi URL
             function isValidUrl(url) {
                 try {
-                    const parsedUrl = new URL(url);
-                    return parsedUrl.protocol === 'http:' || parsedUrl.protocol === 'https:';
+                    new URL(url);
+                    return true;
                 } catch (error) {
                     return false;
                 }
             }
             
             // Tampilkan hasil sukses
-            function showSuccess(shortLink, issueNumber, githubIssueUrl, destinationUrl) {
+            function showSuccess(shortLink, issueNumber) {
                 resultContainer.className = 'result-container success';
                 resultTitle.textContent = 'Berhasil!';
-                resultMessage.textContent = `Short link berhasil dibuat:`;
+                resultMessage.textContent = `Short link berhasil dibuat dengan issue number: ${issueNumber}`;
                 shortUrl.textContent = shortLink;
-                
-                issueInfo.innerHTML = `
-                    <strong>Issue Number:</strong> ${issueNumber}<br>
-                    <strong>URL Tujuan:</strong> ${destinationUrl}<br>
-                    <strong>GitHub Issue:</strong> <a href="${githubIssueUrl}" target="_blank" style="color: #4facfe;">Lihat di GitHub</a>
-                `;
-                
                 resultContainer.style.display = 'block';
+                
+                // Scroll ke hasil
                 resultContainer.scrollIntoView({ behavior: 'smooth' });
             }
             
@@ -393,8 +345,9 @@
                 resultTitle.textContent = 'Error';
                 resultMessage.textContent = message;
                 shortUrl.textContent = '';
-                issueInfo.innerHTML = '';
                 resultContainer.style.display = 'block';
+                
+                // Scroll ke hasil
                 resultContainer.scrollIntoView({ behavior: 'smooth' });
             }
             
@@ -412,16 +365,10 @@
                 });
             });
             
-            // Fungsi test link
-            testBtn.addEventListener('click', function() {
-                const testUrl = shortUrl.textContent;
-                window.open(testUrl, '_blank');
-            });
-            
             // Auto-fill contoh untuk testing
             document.getElementById('destinationUrl').value = 'https://example.com';
-            document.getElementById('linkTitle').value = 'Contoh Website';
-            document.getElementById('issueDescription').value = 'Ini adalah contoh website untuk testing';
+            document.getElementById('issueTitle').value = 'Short Link Example';
+            document.getElementById('issueDescription').value = 'Ini adalah contoh short link';
         });
     </script>
 </body>
