@@ -7,40 +7,12 @@
     <link rel="stylesheet" href="style.css">
     <style>
         .create-container {
-            max-width: 1000px;
+            max-width: 600px;
             margin: 0 auto;
         }
         
-        .main-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin-top: 30px;
-        }
-        
-        @media (max-width: 900px) {
-            .main-content {
-                grid-template-columns: 1fr;
-            }
-        }
-        
-        .form-section, .list-section {
-            background: rgba(25, 25, 25, 0.6);
-            padding: 25px;
-            border-radius: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .section-title {
-            color: #4facfe;
-            margin-bottom: 20px;
-            font-size: 1.5rem;
-            border-bottom: 2px solid #4facfe;
-            padding-bottom: 10px;
-        }
-        
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             text-align: left;
         }
         
@@ -53,12 +25,12 @@
         
         .form-input {
             width: 100%;
-            padding: 12px;
-            border-radius: 8px;
+            padding: 15px;
+            border-radius: 10px;
             border: 1px solid rgba(255, 255, 255, 0.1);
             background: rgba(40, 40, 40, 0.6);
             color: #fff;
-            font-size: 0.95rem;
+            font-size: 1rem;
             transition: all 0.3s ease;
         }
         
@@ -69,147 +41,119 @@
         }
         
         .form-textarea {
-            min-height: 80px;
+            min-height: 100px;
             resize: vertical;
         }
         
-        .form-small {
-            color: #888;
-            font-size: 0.85rem;
-            margin-top: 5px;
-            display: block;
-        }
-        
-        .shortlinks-list {
-            max-height: 500px;
-            overflow-y: auto;
-        }
-        
-        .shortlink-item {
-            background: rgba(35, 35, 35, 0.6);
-            border-radius: 8px;
+        .token-info {
+            background: linear-gradient(145deg, #1e2a3e, #2a3b52);
             padding: 15px;
-            margin-bottom: 15px;
-            border-left: 4px solid #00f2fe;
-            transition: all 0.3s ease;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid #4facfe;
         }
         
-        .shortlink-item:hover {
-            background: rgba(45, 45, 45, 0.8);
-            transform: translateX(5px);
-        }
-        
-        .shortlink-number {
-            background: #00f2fe;
-            color: #000;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-weight: bold;
-            font-size: 0.8rem;
-            margin-right: 10px;
-        }
-        
-        .shortlink-url {
+        .token-info h3 {
             color: #4facfe;
-            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .result-container {
+            display: none;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+            border-left: 4px solid #00f2fe;
+        }
+        
+        .result-container.success {
+            display: block;
+            background: linear-gradient(145deg, #1e3e2a, #2a523b);
+        }
+        
+        .result-container.error {
+            display: block;
+            background: linear-gradient(145deg, #3e1e1e, #522a2a);
+            border-left-color: #ff6b6b;
+        }
+        
+        .short-url {
             word-break: break-all;
-            margin-bottom: 5px;
-        }
-        
-        .shortlink-destination {
-            color: #b0b0b0;
-            font-size: 0.9rem;
-            word-break: break-all;
-            margin-bottom: 8px;
-        }
-        
-        .shortlink-title {
-            color: #fff;
-            font-size: 0.95rem;
-            margin-bottom: 5px;
-        }
-        
-        .shortlink-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
-        
-        .action-btn {
-            padding: 5px 12px;
-            border: none;
-            border-radius: 5px;
-            font-size: 0.8rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: monospace;
         }
         
         .copy-btn {
-            background: #4facfe;
-            color: white;
-        }
-        
-        .test-btn {
-            background: #ffcc00;
-            color: black;
-        }
-        
-        .github-btn {
-            background: #6e5494;
-            color: white;
-        }
-        
-        .action-btn:hover {
-            opacity: 0.9;
-            transform: translateY(-2px);
-        }
-        
-        .refresh-btn {
-            background: linear-gradient(to right, #00f2fe, #4facfe);
+            background: linear-gradient(to right, #00f2fe 0%, #4facfe 100%);
             border: none;
             border-radius: 5px;
             padding: 8px 15px;
             color: white;
             cursor: pointer;
-            margin-bottom: 15px;
+            font-size: 0.9rem;
+            margin-right: 10px;
+        }
+        
+        .test-btn {
+            background: linear-gradient(to right, #ffcc00, #ff9900);
+            border: none;
+            border-radius: 5px;
+            padding: 8px 15px;
+            color: white;
+            cursor: pointer;
             font-size: 0.9rem;
         }
         
-        .empty-state {
+        .loading {
+            display: none;
             text-align: center;
-            color: #888;
-            padding: 40px 20px;
+            margin: 20px 0;
         }
         
-        .loading-list {
-            text-align: center;
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid #4facfe;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .instructions {
+            background: rgba(30, 30, 30, 0.5);
             padding: 20px;
-            color: #4facfe;
+            border-radius: 10px;
+            margin: 30px 0;
+            border-left: 4px solid #ffcc00;
         }
         
-        .stats {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
+        .instructions h3 {
+            color: #ffcc00;
+            margin-bottom: 15px;
         }
         
-        .stat-item {
-            background: rgba(40, 40, 40, 0.6);
-            padding: 10px 15px;
-            border-radius: 8px;
-            border-left: 3px solid #00f2fe;
+        .instructions ol {
+            padding-left: 20px;
         }
         
-        .stat-number {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #00f2fe;
-        }
-        
-        .stat-label {
-            font-size: 0.8rem;
+        .instructions li {
+            margin-bottom: 10px;
             color: #b0b0b0;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
         }
     </style>
 </head>
@@ -226,90 +170,77 @@
     <!-- Main Content -->
     <div class="container create-container">
         <h1>Buat Short Link</h1>
-        <p>Buat dan kelola tautan pendek menggunakan GitHub Issues API</p>
+        <p>Buat tautan pendek menggunakan GitHub Issues API</p>
         
-        <div class="main-content">
-            <!-- Form Section -->
-            <div class="form-section">
-                <h2 class="section-title">Buat Short Link Baru</h2>
-                
-                <form id="shortenForm">
-                    <div class="form-group">
-                        <label for="destinationUrl">URL Tujuan:</label>
-                        <input type="url" id="destinationUrl" class="form-input" 
-                               placeholder="https://example.com" required
-                               pattern="https?://.+" title="Harus dimulai dengan http:// atau https://">
-                        <span class="form-small">URL harus valid dan lengkap dengan http/https</span>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="linkTitle">Judul Link:</label>
-                        <input type="text" id="linkTitle" class="form-input" 
-                               placeholder="Judul untuk link ini" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="githubToken">GitHub Personal Access Token:</label>
-                        <input type="password" id="githubToken" class="form-input" 
-                               placeholder="ghp_yourTokenHere" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="issueDescription">Deskripsi Tambahan:</label>
-                        <textarea id="issueDescription" class="form-input form-textarea" 
-                                  placeholder="Deskripsi tambahan tentang link ini..."></textarea>
-                    </div>
-                    
-                    <button type="submit" class="btn">Buat Short Link</button>
-                </form>
-                
-                <div class="loading" id="loading">
-                    <div class="spinner"></div>
-                    <p>Sedang membuat GitHub Issue...</p>
-                </div>
-                
-                <div class="result-container" id="resultContainer">
-                    <h3 id="resultTitle">Berhasil!</h3>
-                    <p id="resultMessage"></p>
-                    <div class="short-url" id="shortUrl"></div>
-                    <div class="btn-group">
-                        <button class="copy-btn" id="copyBtn">Salin URL</button>
-                        <button class="test-btn" id="testBtn">Test Link</button>
-                    </div>
-                    <div id="issueInfo" style="margin-top: 15px; font-size: 0.9rem; color: #b0b0b0;"></div>
-                </div>
+        <div class="instructions">
+            <h3>Mekanisme:</h3>
+            <ul>
+                <li><strong>Title Issue</strong> = URL tujuan (harus valid URL)</li>
+                <li><strong>Body Issue</strong> = Judul/deskripsi link</li>
+                <li><strong>Issue Number</strong> = Path parameter untuk short link</li>
+            </ul>
+        </div>
+        
+        <form id="shortenForm">
+            <div class="form-group">
+                <label for="destinationUrl">URL Tujuan (Title Issue):</label>
+                <input type="url" id="destinationUrl" class="form-input" 
+                       placeholder="https://example.com" required
+                       pattern="https?://.+" title="Harus dimulai dengan http:// atau https://">
+                <small style="color: #888; font-size: 0.9rem;">URL harus valid dan lengkap dengan http/https</small>
             </div>
             
-            <!-- List Section -->
-            <div class="list-section">
-                <h2 class="section-title">Daftar ShortLink</h2>
-                
-                <div class="stats" id="statsContainer">
-                    <div class="stat-item">
-                        <div class="stat-number" id="totalLinks">0</div>
-                        <div class="stat-label">Total Links</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number" id="activeLinks">0</div>
-                        <div class="stat-label">Active</div>
-                    </div>
-                </div>
-                
-                <button class="refresh-btn" id="refreshBtn">🔄 Refresh List</button>
-                
-                <div class="shortlinks-list" id="shortlinksList">
-                    <div class="loading-list">
-                        <div class="spinner"></div>
-                        <p>Memuat daftar shortlink...</p>
-                    </div>
-                </div>
+            <div class="form-group">
+                <label for="linkTitle">Judul Link (Body Issue):</label>
+                <input type="text" id="linkTitle" class="form-input" 
+                       placeholder="Judul untuk link ini" required>
             </div>
+            
+            <div class="form-group">
+                <label for="githubToken">GitHub Personal Access Token:</label>
+                <input type="password" id="githubToken" class="form-input" 
+                       placeholder="ghp_yourTokenHere" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="issueDescription">Deskripsi Tambahan (Opsional):</label>
+                <textarea id="issueDescription" class="form-input form-textarea" 
+                          placeholder="Deskripsi tambahan tentang link ini..."></textarea>
+            </div>
+            
+            <button type="submit" class="btn">Buat Short Link</button>
+        </form>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Sedang membuat GitHub Issue...</p>
+        </div>
+        
+        <div class="result-container" id="resultContainer">
+            <h3 id="resultTitle">Berhasil!</h3>
+            <p id="resultMessage"></p>
+            <div class="short-url" id="shortUrl"></div>
+            <div class="btn-group">
+                <button class="copy-btn" id="copyBtn">Salin URL</button>
+                <button class="test-btn" id="testBtn">Test Link</button>
+            </div>
+            <div id="issueInfo" style="margin-top: 15px; font-size: 0.9rem; color: #b0b0b0;"></div>
         </div>
         
         <div class="token-info">
             <h3>Info GitHub Token:</h3>
             <p>Buat Personal Access Token di: GitHub Settings → Developer settings → Personal access tokens</p>
-            <p>Permission yang dibutuhkan: <strong>repo</strong> (untuk membuat dan membaca issue)</p>
+            <p>Permission yang dibutuhkan: <strong>repo</strong> (untuk membuat issue)</p>
+        </div>
+        
+        <div class="instructions">
+            <h3>Catatan Penting:</h3>
+            <ul>
+                <li>Pastikan repository GitHub Anda sudah ada</li>
+                <li>Token harus memiliki permission "repo"</li>
+                <li>URL tujuan harus valid (dimulai dengan http:// atau https://)</li>
+                <li>Issue number akan menjadi path parameter short link</li>
+            </ul>
         </div>
     </div>
 
@@ -351,21 +282,13 @@
             const copyBtn = document.getElementById('copyBtn');
             const testBtn = document.getElementById('testBtn');
             const issueInfo = document.getElementById('issueInfo');
-            const refreshBtn = document.getElementById('refreshBtn');
-            const shortlinksList = document.getElementById('shortlinksList');
-            const totalLinks = document.getElementById('totalLinks');
-            const activeLinks = document.getElementById('activeLinks');
             
-            // Konfigurasi GitHub
-            const GITHUB_OWNER = 'YOUR_OWNER';
-            const GITHUB_REPO = 'YOUR_REPO';
+            // Konfigurasi GitHub (GANTI dengan milik Anda)
+            const GITHUB_OWNER = 'YOUR_OWNER'; // Ganti dengan username GitHub Anda
+            const GITHUB_REPO = 'YOUR_REPO';   // Ganti dengan nama repository Anda
             const GITHUB_API_URL = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/issues`;
-            const BASE_URL = window.location.origin;
+            const BASE_URL = window.location.origin; // URL dasar website Anda
             
-            // Load shortlinks on page load
-            loadShortLinks();
-            
-            // Form submission
             form.addEventListener('submit', async function(e) {
                 e.preventDefault();
                 
@@ -374,20 +297,23 @@
                 const githubToken = document.getElementById('githubToken').value;
                 const description = document.getElementById('issueDescription').value;
                 
+                // Validasi URL
                 if (!isValidUrl(destinationUrl)) {
                     showError('URL tidak valid. Harus dimulai dengan http:// atau https://');
                     return;
                 }
                 
+                // Tampilkan loading
                 loading.style.display = 'block';
                 resultContainer.style.display = 'none';
                 
                 try {
+                    // Buat issue di GitHub dengan title sebagai URL tujuan
                     const response = await createGitHubIssue(
                         githubToken, 
-                        destinationUrl,
-                        linkTitle,
-                        description
+                        destinationUrl, // Title = URL tujuan
+                        linkTitle,      // Body = Judul link
+                        description     // Deskripsi tambahan
                     );
                     
                     if (response && response.number && response.html_url) {
@@ -395,9 +321,8 @@
                         const shortLink = `${BASE_URL}/${issueNumber}`;
                         const githubIssueUrl = response.html_url;
                         
+                        // Tampilkan hasil
                         showSuccess(shortLink, issueNumber, githubIssueUrl, response.title);
-                        // Refresh list after successful creation
-                        loadShortLinks(githubToken);
                     } else {
                         throw new Error('Gagal membuat issue: Response tidak valid');
                     }
@@ -408,151 +333,7 @@
                 }
             });
             
-            // Refresh button
-            refreshBtn.addEventListener('click', function() {
-                const token = document.getElementById('githubToken').value;
-                if (token) {
-                    loadShortLinks(token);
-                } else {
-                    showError('Masukkan GitHub token terlebih dahulu');
-                }
-            });
-            
-            // Load shortlinks from GitHub
-            async function loadShortLinks(token = null) {
-                if (!token) {
-                    shortlinksList.innerHTML = `
-                        <div class="empty-state">
-                            <p>Masukkan GitHub token untuk melihat daftar shortlink</p>
-                        </div>
-                    `;
-                    return;
-                }
-                
-                shortlinksList.innerHTML = `
-                    <div class="loading-list">
-                        <div class="spinner"></div>
-                        <p>Memuat daftar shortlink...</p>
-                    </div>
-                `;
-                
-                try {
-                    const issues = await fetchGitHubIssues(token);
-                    displayShortLinks(issues);
-                    updateStats(issues);
-                } catch (error) {
-                    shortlinksList.innerHTML = `
-                        <div class="empty-state">
-                            <p>Error: ${error.message}</p>
-                        </div>
-                    `;
-                }
-            }
-            
-            // Fetch GitHub issues
-            async function fetchGitHubIssues(token) {
-                const response = await fetch(GITHUB_API_URL + '?state=all&per_page=100', {
-                    headers: {
-                        'Accept': 'application/vnd.github.v3+json',
-                        'Authorization': `token ${token}`
-                    }
-                });
-                
-                if (!response.ok) {
-                    throw new Error('Gagal mengambil data issues');
-                }
-                
-                return await response.json();
-            }
-            
-            // Display shortlinks list
-            function displayShortLinks(issues) {
-                if (!issues || issues.length === 0) {
-                    shortlinksList.innerHTML = `
-                        <div class="empty-state">
-                            <p>Belum ada shortlink yang dibuat</p>
-                            <p>Buat shortlink pertama Anda menggunakan form di samping</p>
-                        </div>
-                    `;
-                    return;
-                }
-                
-                const validLinks = issues.filter(issue => 
-                    issue.title && isValidUrl(issue.title) && !issue.title.includes('[')
-                );
-                
-                if (validLinks.length === 0) {
-                    shortlinksList.innerHTML = `
-                        <div class="empty-state">
-                            <p>Tidak ada shortlink yang valid</p>
-                            <p>Pastikan title issue berisi URL yang valid</p>
-                        </div>
-                    `;
-                    return;
-                }
-                
-                shortlinksList.innerHTML = validLinks.map(issue => `
-                    <div class="shortlink-item">
-                        <div>
-                            <span class="shortlink-number">#${issue.number}</span>
-                            <span class="shortlink-state" style="color: ${issue.state === 'open' ? '#00ff00' : '#ff6b6b'}">
-                                ${issue.state === 'open' ? '🟢' : '🔴'}
-                            </span>
-                        </div>
-                        <div class="shortlink-url">${BASE_URL}/${issue.number}</div>
-                        <div class="shortlink-destination" title="${issue.title}">
-                            → ${truncateText(issue.title, 50)}
-                        </div>
-                        <div class="shortlink-title">${extractTitleFromBody(issue.body) || 'No title'}</div>
-                        <div class="shortlink-actions">
-                            <button class="action-btn copy-btn" onclick="copyToClipboard('${BASE_URL}/${issue.number}')">
-                                📋 Copy
-                            </button>
-                            <button class="action-btn test-btn" onclick="window.open('${BASE_URL}/${issue.number}', '_blank')">
-                                🔗 Test
-                            </button>
-                            <button class="action-btn github-btn" onclick="window.open('${issue.html_url}', '_blank')">
-                                GitHub
-                            </button>
-                        </div>
-                    </div>
-                `).join('');
-            }
-            
-            // Update statistics
-            function updateStats(issues) {
-                const validLinks = issues.filter(issue => 
-                    issue.title && isValidUrl(issue.title) && !issue.title.includes('[')
-                );
-                
-                const active = validLinks.filter(issue => issue.state === 'open').length;
-                
-                totalLinks.textContent = validLinks.length;
-                activeLinks.textContent = active;
-            }
-            
-            // Extract title from issue body
-            function extractTitleFromBody(body) {
-                if (!body) return null;
-                const titleMatch = body.match(/\*\*Judul Link:\*\*\s*(.+?)(?:\n|$)/);
-                return titleMatch ? titleMatch[1].trim() : null;
-            }
-            
-            // Truncate text
-            function truncateText(text, maxLength) {
-                return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
-            }
-            
-            // Copy to clipboard
-            function copyToClipboard(text) {
-                navigator.clipboard.writeText(text).then(() => {
-                    alert('URL berhasil disalin!');
-                }).catch(err => {
-                    alert('Gagal menyalin URL: ' + err);
-                });
-            }
-            
-            // GitHub issue creation function
+            // Fungsi untuk membuat GitHub Issue
             async function createGitHubIssue(token, title, body, description = '') {
                 const fullBody = description 
                     ? `**Judul Link:** ${body}\n\n**Deskripsi:** ${description}\n\n---\n*Dibuat otomatis melalui Short Link Generator*`
@@ -566,8 +347,8 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        title: title,
-                        body: fullBody
+                        title: title,  // Title = URL tujuan
+                        body: fullBody // Body = Judul + deskripsi
                     })
                 });
                 
